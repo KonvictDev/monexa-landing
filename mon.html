@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monexa - Smart Offline Billing App for Shop Owners</title>
+    <meta name="description" content="The #1 offline billing app for Indian shop owners. Features Staff Mode, WhatsApp receipts, and Inventory management. No internet required.">
+    <meta name="theme-color" content="#006C4C">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://monexa.app/">
+    <meta property="og:title" content="Monexa - Smart Offline Billing App">
+    <meta property="og:description" content="Manage your shop offline. Features Staff Mode, WhatsApp receipts, and Inventory management.">
+    <meta property="og:image" content="assets/Social.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Monexa - Smart Offline Billing App">
+    <meta name="twitter:description" content="Run your shop without internet. Secure Staff Mode & WhatsApp Billing.">
+    <meta name="twitter:image" content="assets/Social.jpg">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple_icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#006C4C',
+                        primaryHover: '#00553A',
+                        onPrimary: '#FFFFFF',
+                        primaryContainer: '#89F8C7',
+                        surface: '#F5FBF7',
+                        surfaceVariant: '#DBE5DE',
+                        dark: '#0F1A15',
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Styles */
+        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        /* --- Realistic Pixel Phone CSS --- */
+        .pixel-frame {
+            width: 300px; /* Mobile width */
+            height: 640px;
+            padding: 18px;
+            background: #18181b; /* Zinc 900 */
+            border-radius: 45px;
+            position: relative;
+            box-shadow: 
+                0 0 0 4px #27272a, /* Outer rim */
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                inset 0 0 0 2px #000;
+            z-index: 10;
+            margin: 0 auto;
+            border: 2px solid #3f3f46;
+        }
+
+        @media (min-width: 768px) {
+            .pixel-frame { width: 320px; height: 680px; }
+        }
+
+        /* Camera Bar */
+        .pixel-frame::before {
+            content: "";
+            position: absolute;
+            top: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 24px;
+            background: #000;
+            border-radius: 14px;
+            z-index: 20;
+        }
+
+        /* Screen Area */
+        .pixel-screen {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .side-button {
+            position: absolute;
+            right: -6px;
+            width: 6px;
+            background: #3f3f46;
+            border-radius: 0 4px 4px 0;
+        }
+        .btn-power { top: 180px; height: 50px; }
+        .btn-volume { top: 250px; height: 90px; }
+
+        /* Play Icon Overlay Transition */
+        .play-icon {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* --- Animations --- */
+        [data-reveal] {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            will-change: opacity, transform;
+        }
+        [data-reveal].visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Background Grain */
+        .bg-grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body class="bg-surface text-gray-800 antialiased selection:bg-primaryContainer selection:text-primary">
+
+<div class="bg-grain"></div>
+
+<nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
+    <div class="absolute inset-0 bg-surface/80 backdrop-blur-xl border-b border-white/20 shadow-sm"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="flex justify-between items-center h-20">
+            <a href="#" class="flex items-center gap-2 group">
+                <div class="bg-primary text-white p-2 rounded-xl group-hover:rotate-12 transition-transform duration-300">
+                    <span class="material-symbols-rounded text-2xl">receipt_long</span>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-gray-900">Monexa</span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8 font-medium text-sm text-gray-600">
+                <a href="#features" class="hover:text-primary transition-colors py-2">Features</a>
+                <a href="#how" class="hover:text-primary transition-colors py-2">How It Works</a>
+                <a href="#pricing" class="hover:text-primary transition-colors py-2">Pricing</a>
+                <a href="#reviews" class="hover:text-primary transition-colors py-2">Reviews</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="https://play.google.com/store/apps/details?id=com.appsbyanandakumar.billing"
+                   class="hidden md:flex bg-gray-900 hover:bg-black text-white px-6 py-2.5 rounded-full font-semibold transition-all hover:scale-105 shadow-lg shadow-gray-900/20 items-center gap-2 text-sm">
+                    <span>Get App</span>
+                    <span class="material-symbols-rounded text-lg">arrow_forward</span>
+                </a>
+                
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-600 hover:text-primary" aria-label="Open Menu">
+                    <span class="material-symbols-rounded text-3xl">menu</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden absolute w-full bg-white border-b border-gray-100 shadow-xl">
+        <div class="px-4 pt-2 pb-6 space-y-1">
+            <a href="#features" class="block px-3 py-4 text-base font-medium text-gray-900 border-b border-gray-50">Features</a>
+            <a href="#how" class="block px-3 py-4 text-base font-medium text-gray-900 border-b border-gray-50">How It Works</a>
+            <a href="#pricing" class="block px-3 py-4 text-base font-medium text-gray-900 border-b border-gray-50">Pricing</a>
+            <a href="https://play.google.com/store/apps/details?id=com.appsbyanandakumar.billing" class="block mt-4 text-center bg-primary text-white px-4 py-3 rounded-xl font-bold">
+                Download Now
+            </a>
+        </div>
+    </div>
+</nav>
+
+<header class="relative pt-36 pb-20 lg:pt-48 lg:pb-32 px-4 overflow-hidden">
+    <div class="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-96 h-96 bg-primaryContainer rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-72 h-72 bg-blue-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+
+    <div class="max-w-5xl mx-auto text-center relative z-10" data-reveal>
+        <div class="inline-flex items-center gap-2 bg-white border border-gray-200 px-4 py-1.5 rounded-full text-sm font-semibold mb-8 shadow-sm hover:shadow-md transition cursor-default">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            <span class="text-gray-600">v1.0 is Live on Play Store</span>
+        </div>
+
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-gray-900 mb-8 leading-[1.1]">
+            Billing for Shops,<br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">Without Internet.</span>
+        </h1>
+        
+        <p class="text-xl md:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
+            The all-in-one POS for Indian retailers. Secure <b>Staff Mode</b>, <b>WhatsApp receipts</b>, and zero downtime.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <a href="https://play.google.com/store/apps/details?id=com.appsbyanandakumar.billing"
+               class="group bg-gray-900 text-white h-14 px-8 rounded-full font-bold text-lg hover:bg-black transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 flex items-center gap-3">
+               <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.3,10.84L17.3,9.2L15.23,11.27L18.66,14.7L20.3,13.16C20.94,12.79 20.94,11.2 20.3,10.84M13.69,12L3.84,2.15L16.81,8.88L14.54,11.15L13.69,12Z" /></svg>
+               <span>Get it on Google Play</span>
+            </a>
+            <a href="#how" class="text-gray-600 font-semibold px-8 py-4 hover:text-primary transition flex items-center gap-2">
+                <span class="material-symbols-rounded">play_circle</span> Watch Demo
+            </a>
+        </div>
+        
+        <div class="mt-12 flex items-center justify-center gap-6 text-sm text-gray-500 font-medium">
+            <span class="flex items-center gap-1"><span class="material-symbols-rounded text-green-600">check_circle</span> No Ads</span>
+            <span class="flex items-center gap-1"><span class="material-symbols-rounded text-green-600">check_circle</span> Auto Backup</span>
+            <span class="flex items-center gap-1"><span class="material-symbols-rounded text-green-600">check_circle</span> Made in India 🇮🇳</span>
+        </div>
+    </div>
+</header>
+
+<section id="features" class="py-24 bg-white rounded-t-[3rem] relative z-20 shadow-[0_-20px_60px_-15px_rgba(0,0,0,0.1)]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="text-center max-w-3xl mx-auto mb-20" data-reveal>
+            <h2 class="text-3xl md:text-5xl font-bold mb-6 text-gray-900">Everything you need to run your shop.</h2>
+            <p class="text-lg text-gray-500">We stripped away the complexity of ERP software and kept only what helps you sell faster.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="group p-8 rounded-[2rem] bg-surface hover:bg-primaryContainer/20 border border-transparent hover:border-primaryContainer transition-all duration-300" data-reveal>
+                <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-rounded text-3xl">badge</span>
+                </div>
+                <h3 class="text-2xl font-bold mb-3 text-gray-900">Staff Mode</h3>
+                <p class="text-gray-600 leading-relaxed">Let your helpers create bills without seeing your profit margins or total daily sales. Keep your business data private.</p>
+            </div>
+
+            <div class="group p-8 rounded-[2rem] bg-surface hover:bg-primaryContainer/20 border border-transparent hover:border-primaryContainer transition-all duration-300" data-reveal>
+                <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-rounded text-3xl">wifi_off</span>
+                </div>
+                <h3 class="text-2xl font-bold mb-3 text-gray-900">100% Offline</h3>
+                <p class="text-gray-600 leading-relaxed">Internet down? No problem. Monexa works completely offline and syncs safely to the cloud when you reconnect.</p>
+            </div>
+
+            <div class="group p-8 rounded-[2rem] bg-surface hover:bg-primaryContainer/20 border border-transparent hover:border-primaryContainer transition-all duration-300" data-reveal>
+                <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-rounded text-3xl">chat</span>
+                </div>
+                <h3 class="text-2xl font-bold mb-3 text-gray-900">WhatsApp Bills</h3>
+                <p class="text-gray-600 leading-relaxed">Save paper. Send professional PDF receipts directly to your customer's WhatsApp with a single tap.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="how" class="py-24 bg-surfaceVariant/30 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-20" data-reveal>
+            <h2 class="text-3xl md:text-5xl font-bold mb-6">Designed for Speed</h2>
+            <p class="text-gray-500 text-lg">Hover over a screen to see it in action.</p>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-12 justify-center items-center">
+            
+            <div class="relative group phone-trigger" data-reveal>
+                <div class="pixel-frame hover:-translate-y-4 transition-transform duration-500 cursor-pointer">
+                    <div class="side-button btn-power"></div>
+                    <div class="side-button btn-volume"></div>
+                    <div class="pixel-screen bg-black relative">
+                        
+                        <div class="play-icon absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                            <div class="w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg">
+                                <span class="material-symbols-rounded text-5xl text-primary ml-1 leading-none">play_arrow</span>
+                            </div>
+                        </div>
+
+                        <video class="hover-video w-full h-full object-cover" loop muted playsinline>
+                            <source src="assets/screen1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <p class="text-center mt-6 font-bold text-gray-700 group-hover:text-primary transition-colors">3-Step Billing</p>
+            </div>
+
+            <div class="relative group phone-trigger" data-reveal style="transition-delay: 100ms">
+                <div class="pixel-frame hover:-translate-y-4 transition-transform duration-500 cursor-pointer">
+                    <div class="side-button btn-power"></div>
+                    <div class="side-button btn-volume"></div>
+                    <div class="pixel-screen bg-black relative">
+                        
+                        <div class="play-icon absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                            <div class="w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg">
+                                <span class="material-symbols-rounded text-5xl text-primary ml-1 leading-none">play_arrow</span>
+                            </div>
+                        </div>
+
+                        <video class="hover-video w-full h-full object-cover" loop muted playsinline>
+                            <source src="assets/screen2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <p class="text-center mt-6 font-bold text-gray-700 group-hover:text-primary transition-colors">Profit Protection</p>
+            </div>
+
+            <div class="relative group phone-trigger" data-reveal style="transition-delay: 200ms">
+                <div class="pixel-frame hover:-translate-y-4 transition-transform duration-500 cursor-pointer">
+                    <div class="side-button btn-power"></div>
+                    <div class="side-button btn-volume"></div>
+                    <div class="pixel-screen bg-black relative">
+                        
+                        <div class="play-icon absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                            <div class="w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg">
+                                <span class="material-symbols-rounded text-5xl text-primary ml-1 leading-none">play_arrow</span>
+                            </div>
+                        </div>
+
+                        <video class="hover-video w-full h-full object-cover" loop muted playsinline>
+                            <source src="assets/screen3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <p class="text-center mt-6 font-bold text-gray-700 group-hover:text-primary transition-colors">Real-time Stock</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section id="reviews" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-16" data-reveal>
+            <h2 class="text-3xl md:text-5xl font-bold mb-4">Loved by Retailers</h2>
+            <div class="flex justify-center items-center gap-2 text-yellow-500 mb-2">
+                <span class="material-symbols-rounded">star</span>
+                <span class="material-symbols-rounded">star</span>
+                <span class="material-symbols-rounded">star</span>
+                <span class="material-symbols-rounded">star</span>
+                <span class="material-symbols-rounded">star</span>
+                <span class="text-gray-900 font-bold text-lg ml-2">4.8/5 Rating</span>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-gray-50 p-8 rounded-3xl" data-reveal>
+                <p class="text-gray-700 text-lg mb-6 leading-relaxed">"The Staff Mode is a game changer. I can finally leave the shop to my boys without worrying about them seeing the purchase prices."</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-xl">P</div>
+                    <div>
+                        <div class="font-bold text-gray-900">Prakash Stores</div>
+                        <div class="text-sm text-gray-500">Grocery • Chennai</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-8 rounded-3xl" data-reveal>
+                <p class="text-gray-700 text-lg mb-6 leading-relaxed">"Customers feel happy when I send the bill on WhatsApp. It looks very professional, like a supermarket bill."</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-pink-500 text-white flex items-center justify-center font-bold text-xl">A</div>
+                    <div>
+                        <div class="font-bold text-gray-900">Ayesha Mart</div>
+                        <div class="text-sm text-gray-500">Supermarket • Hyderabad</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-8 rounded-3xl" data-reveal>
+                <p class="text-gray-700 text-lg mb-6 leading-relaxed">"I tried many apps but they all needed internet. Monexa works fast even in my basement shop where signal is weak."</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-xl">L</div>
+                    <div>
+                        <div class="font-bold text-gray-900">Lakshmi Garments</div>
+                        <div class="text-sm text-gray-500">Clothing • Coimbatore</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="pricing" class="py-24 bg-surface">
+    <div class="max-w-4xl mx-auto px-4">
+        <h2 class="text-3xl md:text-5xl font-bold text-center mb-16" data-reveal>Pricing that makes sense</h2>
+
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+            
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 relative group hover:border-primary/30 transition-all" data-reveal>
+                <h3 class="text-xl font-bold text-gray-500 mb-2">Starter</h3>
+                <div class="text-5xl font-extrabold mb-6 text-gray-900">Free</div>
+                <p class="text-gray-500 mb-8">Perfect for small shops just starting digital billing.</p>
+                
+                <ul class="space-y-4 mb-8">
+                    <li class="flex items-center gap-3 text-gray-700"><span class="material-symbols-rounded text-green-600">check</span> Unlimited Bills</li>
+                    <li class="flex items-center gap-3 text-gray-700"><span class="material-symbols-rounded text-green-600">check</span> 20 Products Limit</li>
+                    <li class="flex items-center gap-3 text-gray-700"><span class="material-symbols-rounded text-green-600">check</span> Basic PDF Reports</li>
+                </ul>
+                <a href="https://play.google.com/store/apps/details?id=com.appsbyanandakumar.billing" class="block w-full py-4 rounded-xl border-2 border-gray-200 text-center font-bold hover:border-gray-900 hover:text-gray-900 transition-colors">Download Free</a>
+            </div>
+
+            <div class="bg-primary text-white p-8 rounded-3xl shadow-2xl shadow-primary/30 relative overflow-hidden transform md:-translate-y-4" data-reveal>
+                <div class="absolute top-0 right-0 bg-yellow-400 text-black text-xs font-bold px-4 py-1.5 rounded-bl-xl shadow-sm">MOST POPULAR</div>
+                
+                <h3 class="text-xl font-bold text-primaryContainer mb-2">Monexa Pro</h3>
+                <div class="flex items-baseline gap-2 mb-1">
+                    <span class="text-6xl font-extrabold">₹1,299</span>
+                    <span class="text-primaryContainer font-medium">/ year</span>
+                </div>
+                <p class="text-white/70 mb-8 text-sm">Less than a cup of chai per day ☕</p>
+
+                <ul class="space-y-4 mb-10">
+                    <li class="flex items-center gap-3 font-medium"><span class="material-symbols-rounded text-yellow-300">check_circle</span> <b>Staff Mode (Secure)</b></li>
+                    <li class="flex items-center gap-3 font-medium"><span class="material-symbols-rounded text-yellow-300">check_circle</span> Unlimited Products</li>
+                    <li class="flex items-center gap-3 font-medium"><span class="material-symbols-rounded text-yellow-300">check_circle</span> Cloud Backup & Sync</li>
+                    <li class="flex items-center gap-3 font-medium"><span class="material-symbols-rounded text-yellow-300">check_circle</span> Priority Support</li>
+                </ul>
+                
+                <a href="https://play.google.com/store/apps/details?id=com.appsbyanandakumar.billing" class="block w-full py-4 rounded-xl bg-white text-primary text-center font-bold hover:bg-yellow-50 transition-colors shadow-lg">Start 14-Day Free Trial</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<footer class="bg-gray-900 text-white py-16 rounded-t-[3rem] mt-12">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
+        <div class="text-center md:text-left">
+            <div class="flex items-center justify-center md:justify-start gap-2 mb-4">
+                <span class="material-symbols-rounded text-3xl text-primaryContainer">receipt_long</span>
+                <span class="text-2xl font-bold">Monexa</span>
+            </div>
+            <p class="text-gray-400 text-sm max-w-xs">Helping Indian retailers grow with simple, powerful technology.</p>
+        </div>
+        
+        <div class="flex gap-8 text-sm text-gray-400 font-medium">
+            <a href="mailto:support@appsbyanandakumar.com" class="hover:text-white transition-colors">Support</a>
+            <a href="https://konvictdev.github.io/monexa_privacy/privacy/index.html" class="hover:text-white transition-colors">Privacy</a>
+            <a href="https://konvictdev.github.io/monexa_privacy/terms/index.html" class="hover:text-white transition-colors">Terms</a>
+        </div>
+        
+        <div class="text-sm text-gray-600">
+            © 2025 AppsByAnandakumar
+        </div>
+    </div>
+</footer>
+
+<div class="fixed bottom-0 w-full bg-white border-t border-gray-200 p-4 md:hidden z-50 transform translate-y-full transition-transform duration-300" id="sticky-cta">
+    <a href="https://play.google.com/store/apps/details?id=com.appsbyanandakumar.billing" class="block w-full bg-primary text-white py-3 rounded-xl text-center font-bold shadow-lg">
+        Download App
+    </a>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        
+        // 1. Reveal Animation
+        const elements = document.querySelectorAll("[data-reveal]");
+        const revealOnScroll = () => {
+            const trigger = window.innerHeight * 0.85;
+            elements.forEach(el => {
+                const box = el.getBoundingClientRect().top;
+                if (box < trigger) el.classList.add("visible");
+            });
+        };
+        
+        // 2. Navbar & Sticky CTA
+        const navbar = document.getElementById('navbar');
+        const stickyCta = document.getElementById('sticky-cta');
+        
+        window.addEventListener("scroll", () => {
+            revealOnScroll();
+            
+            // Toggle Navbar Transparency
+            if (window.scrollY > 20) {
+                navbar.classList.add('shadow-md');
+            } else {
+                navbar.classList.remove('shadow-md');
+            }
+
+            // Show Sticky CTA after Hero
+            if (window.scrollY > 600) {
+                stickyCta.classList.remove('translate-y-full');
+            } else {
+                stickyCta.classList.add('translate-y-full');
+            }
+        });
+
+        // 3. Mobile Menu
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuBtn.addEventListener('click', () => {
+            const isHidden = mobileMenu.classList.contains('hidden');
+            if (isHidden) {
+                mobileMenu.classList.remove('hidden');
+                menuBtn.innerHTML = '<span class="material-symbols-rounded text-3xl">close</span>';
+            } else {
+                mobileMenu.classList.add('hidden');
+                menuBtn.innerHTML = '<span class="material-symbols-rounded text-3xl">menu</span>';
+            }
+        });
+
+        // 4. Video Hover Logic (Play on Enter, Reset on Leave)
+        const phoneTriggers = document.querySelectorAll('.phone-trigger');
+
+        phoneTriggers.forEach(trigger => {
+            const video = trigger.querySelector('.hover-video');
+            const icon = trigger.querySelector('.play-icon');
+
+            if (video) {
+                // Play on Enter
+                trigger.addEventListener('mouseenter', async () => {
+                    try {
+                        video.currentTime = 0;
+                        await video.play();
+                        if(icon) icon.style.opacity = '0';
+                    } catch (err) {
+                        console.log("Auto-play prevented", err);
+                    }
+                });
+
+                // Pause & Reset on Leave
+                trigger.addEventListener('mouseleave', () => {
+                    video.pause();
+                    video.currentTime = 0;
+                    if(icon) icon.style.opacity = '1';
+                });
+            }
+        });
+
+        // Initial check
+        revealOnScroll();
+    });
+</script>
+
+</body>
+</html>
